@@ -3,8 +3,8 @@
 /backend/public/build
 /backend/public/hot
 /backend/public/storage
+/backend/storage/logs/*.log
 /backend/.gitgub
-/backend/storage/*.key
 /backend/storage/*.key
 /backend/vendor
 /backend/.env
@@ -20,15 +20,11 @@
 /backend/auth.json
 /backend/npm-debug.log
 /backend/yarn-error.log
-/backend/npm-debug.log
-/backend/yarn-error.log
 /backend/MCP
 /services/checkerFile/.idea
 /.fleet
 /.idea
 /.vscode
-/.cursor
-/.cursor/rules
 /ldap/ldif
 /ldap/config
 /redis/data/dump.rdb
@@ -37,4 +33,4 @@
 /nginx/ssl/server.key
 /nginx/ssl/server.crt
 /nginx/ssl/server.pfx
-/nginx/certbot
+/nginx/data/certbot/

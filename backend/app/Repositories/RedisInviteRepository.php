@@ -12,7 +12,7 @@ use Predis\Collection\Iterator\Keyspace;
 class RedisInviteRepository implements CacheRepositoryInterface
 {
     private $redis;
-    
+
 
     public function __construct(string $connection)
     {
@@ -27,17 +27,12 @@ class RedisInviteRepository implements CacheRepositoryInterface
         try {
             //$value = !empty($this->redis->get($key)) ? $this->redis->get($key) : null;
             $value = $this->redis->get($cleanKey);
-            //Не нужно декодировать значение, т.к. оно уже декодировано в InviteDTO
-            // $decodedValue = json_decode($value, true);
-            // if (json_last_error() === JSON_ERROR_NONE) {
-            //     return $decodedValue;
-            // }
             return $value;
         } catch (Exception $e) {
             throw new InvalidRedisValueException("Ошибка при получении значения {$key} из Redis");
         }
     }
-    
+
     public function set(string $key, mixed $value, ?int $ttl = 3600) : bool
     {
         try {
@@ -47,7 +42,7 @@ class RedisInviteRepository implements CacheRepositoryInterface
             throw new InvalidRedisValueException("Ошибка при установке значения {$key} в Redis");
         }
     }
-    
+
     public function delete(string $key) : bool
     {
         try {
@@ -65,7 +60,7 @@ class RedisInviteRepository implements CacheRepositoryInterface
             throw new InvalidRedisValueException("Ошибка при проверке существования значения {$key} в Redis");
         }
     }
-    
+
     public function clear() : bool
     {
         try {

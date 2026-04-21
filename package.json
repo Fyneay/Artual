@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@skeletonlabs/skeleton": "^4.0.2",
+    "@skeletonlabs/skeleton-svelte": "^4.0.2"
+  }
+}

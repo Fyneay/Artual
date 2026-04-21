@@ -1,4 +1,4 @@
-FROM golang:1.24.0 as builder
+FROM golang:1.24.2 AS builder
 LABEL authors="fyneay"
 WORKDIR /app
 

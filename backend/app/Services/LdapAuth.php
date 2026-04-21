@@ -22,7 +22,6 @@ class LdapAuth
     {
         try {
             $user = $this->ldapSearch->searchUser($data['username']);
-            //authentication (maybe other service)
             if ($user['count'] != 0) {
             }
 

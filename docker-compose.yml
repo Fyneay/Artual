@@ -39,6 +39,7 @@ services:
       - postgres
       - pgadmin
       - rabbitmq
+      - client
   redis:
     image: redis:7.4.2
     container_name: artual-redis
@@ -86,7 +87,25 @@ services:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     restart: always
     expose:
+      - '5672'
       - '15672'
+    networks:
+      - artual-network
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: artual-client:0.0.1
+    container_name: artual-client
+    restart: unless-stopped
+    environment:
+      - BASE_PATH=/app
+      - ORIGIN=https://localhost
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    expose:
+      - '5173'
     networks:
       - artual-network
   openldap:
@@ -138,13 +157,20 @@ services:
     restart: unless-stopped
     environment:
       - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=15672
-      - RABBITMQ_USER=admin
-      - RABBITMQ_PASS=admin
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=${RABBITMQ_USER:-admin}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-admin}
+      - RABBITMQ_VHOST=${RABBITMQ_VHOST:-/}
+      - KSC_HOST=${KSC_HOST}
+      - KSC_USER=${KSC_USER}
+      - KSC_PASSWORD=${KSC_PASSWORD}
+      - KSC_DOMAIN=${KSC_DOMAIN:-}
+      - KSC_SCAN_TASK_ID=${KSC_SCAN_TASK_ID:-102}
     depends_on:
       - rabbitmq
     volumes:
       - ./services/checkerFile:/app
+      - ./.env:/app/.env
     ports:
       - "9090:9090"
     networks:

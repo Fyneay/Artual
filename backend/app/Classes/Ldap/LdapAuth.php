@@ -52,13 +52,7 @@ class LdapAuth implements Auth
         if (!$this->checkPassword($user, $data)) {
             throw new LdapException('Неверный пароль');
         }
-        //Внести запись в БД через репозиторий
-        // $user = User::query()->create([
-        //     'nickname' => $user['nickname'],
-        //     'password' => Hash::make($user['password']),
-        //     'role_id'=> $user['gidNumber'],
-        //     'email' => $user['email']
-        // ]);
+
         $user = $this->userRepository->create([
             'nickname' => $data['nickname'],
             'password' => Hash::make($data['password']),

@@ -4,13 +4,19 @@ namespace App\Services;
 
 
 use App\Classes\FileUpload;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LocalFileUploader extends FileUpload
 {
-    private string $storageDriver = 'local';
+    private string $storageDriver;
+
+    public function __construct(string $storageDriver = 'local')
+    {
+        $this->storageDriver = $storageDriver;
+    }
 
 
     protected function generateName(UploadedFile $file) : string
@@ -18,24 +24,36 @@ class LocalFileUploader extends FileUpload
         $extension = $file->getClientOriginalExtension();
         $baseCode = Str::uuid()->toString();
 
-        return $baseCode . $extension ;
+        if ($extension !== '') {
+            $extension = '.' . ltrim($extension, '.');
+        }
+
+        return $baseCode . $extension;
     }
 
     public function upload(UploadedFile $file, string $path) : string
     {
         $fileName = $this->generateName($file);
 
-        return Storage::disk($this->storageDriver)->putFileAs($path, $file, $fileName);
+        return $this->disk()->putFileAs($path, $file, $fileName);
     }
 
     public function delete(string $path) : bool
     {
-        return Storage::disk($this->storageDriver)->delete($path);
+        return $this->disk()->delete($path);
     }
 
     public function getUrlFile(string $path): string
     {
-        return Storage::disk($this->storageDriver)->url($path);
+        return $this->disk()->url($path);
+    }
+
+    private function disk(): FilesystemAdapter
+    {
+        /** @var FilesystemAdapter $disk */
+        $disk = Storage::disk($this->storageDriver);
+
+        return $disk;
     }
 
 

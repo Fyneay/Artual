@@ -1,15 +1,13 @@
-#development
-FROM node:20.16.0-alpine as prod
-LABEL authors="ES"
-WORKDIR /opt/server/
-RUN apk add --no-cache tzdata #Установка пакета timezone
-RUN apk add --no-cache git #Нужна для работы degit
-#RUN corepack enable && \
-#  pnpm install --frozen-lockfile && \
-#  pnpm build && \
-#  pnpm prune --prod
-ENV TZ Europe/Moscow
-ENV NODE_PATH /opt/server/node_modules
-COPY /*.json ./
-EXPOSE 3000
-CMD ["node"]
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN if [ -f package.json ]; then npm install; fi
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["sh", "-c", "if [ ! -f package.json ]; then npm create svelte@latest . -- --template skeleton --types typescript --no-prettier --no-eslint --no-playwright --no-vitest && npm install; fi && npm install && npm run dev -- --host 0.0.0.0"]

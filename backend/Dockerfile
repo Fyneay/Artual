@@ -17,11 +17,15 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libonig-dev \
-    libzip-dev
+    libzip-dev \
+    libssh2-1-dev \
+    libssh2-1
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp && \
     docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/
-RUN docker-php-ext-install pdo pdo_pgsql pgsql mbstring gd zip exif pcntl ldap
+RUN docker-php-ext-install pdo pdo_pgsql pgsql mbstring gd zip exif pcntl ldap sockets bcmath
+RUN pecl install ssh2-1.4 && \
+docker-php-ext-enable ssh2
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 COPY . /var/www

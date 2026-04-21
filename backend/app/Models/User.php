@@ -23,10 +23,6 @@ class User extends Authenticatable
         return $this->belongsTo(Section::class,'sections_user_id_foreign','id');
     }
 
-    // public function userGroup() : hasOne
-    // {
-    //     return $this->hasOne(UserGroup::class,'users_role_id_foreign','role_id');
-    // }
     public function userGroup() : belongsTo
     {
         return $this->belongsTo(UserGroup::class,'role_id','id');

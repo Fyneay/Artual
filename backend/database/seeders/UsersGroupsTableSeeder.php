@@ -18,12 +18,19 @@ class UsersGroupsTableSeeder extends Seeder
             'name' => 'Системный администратор'
         ]);
         DB::table('users_groups')->insert([
+            'id' => 2,
+            'name' => 'Архивариус'
+        ]);
+        DB::table('users_groups')->insert([
+            'id' => 3,
             'name' => 'Директорат'
         ]);
         DB::table('users_groups')->insert([
+            'id' => 4,
             'name' => 'Начальник отдела'
         ]);
         DB::table('users_groups')->insert([
+            'id' => 5,
             'name' => 'Сотрудник'
         ]);
     }

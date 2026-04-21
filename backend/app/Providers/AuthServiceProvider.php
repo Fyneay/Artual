@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Values\Invites\InviteDTO;
 use Illuminate\Support\ServiceProvider;
 use App\Classes\Ldap\LdapAuth;
 use App\Services\LdapSearch;
@@ -17,6 +18,9 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register services.
      */
+    protected $policies = [
+        InviteDTO::class => InvitePolicy::class,
+    ];
     public function register(): void
     {
         $this->app->bind(LdapAuth::class, function (Application $app) {
@@ -47,6 +51,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        
     }
 }

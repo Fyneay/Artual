@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             TypesSectionsTableSeeder::class,
             SectionsTableSeeder::class,
             ArticlesTableSeeder::class,
+            ListsPeriodsTableSeeder::class,
+            TypesDocumentTableSeeder::class,
+            StatusTableSeeder::class,
         ]);
 
     }

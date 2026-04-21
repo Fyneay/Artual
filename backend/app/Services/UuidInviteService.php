@@ -15,7 +15,7 @@ class UuidInviteService
     {
         $this->cacheRepository = $cacheRepository;
     }
-    
+
     public function generate() : string
     {
         return UuidGenerator::generate();
@@ -30,7 +30,7 @@ class UuidInviteService
     }
 
     public function delete(string $key) : bool
-    {  
+    {
 
         if ($this->checkUsed($key) || $this->checkDate($key)) {
             return $this->cacheRepository->delete($key);
@@ -41,17 +41,24 @@ class UuidInviteService
     public function checkDate(string $key) : bool
     {
         $data = $this->cacheRepository->get($key);
-        //$inviteDTO = InviteDTO::fromJson($data);
-        //return $inviteDTO->getKey('expires_at') < time();
-        return $data['expires_at'] > now()->format('Y-m-d H:i:s');
+        if (!$data) {
+            return true;
+        }
+
+        $inviteDTO = InviteDTO::fromJson($data);
+        $now = new \DateTimeImmutable();
+        return $inviteDTO->expires_at < $now;
     }
 
     public function checkUsed(string $key) : bool
     {
         $data = $this->cacheRepository->get($key);
-        //$inviteDTO = InviteDTO::fromJson($data);
-        //return $inviteDTO->getKey('used') > 0;
-        return $data['used'];
+        if (!$data) {
+            return false;
+        }
+
+        $inviteDTO = InviteDTO::fromJson($data);
+        return $inviteDTO->used > 0;
     }
 
     public function checkExists(string $key) : bool

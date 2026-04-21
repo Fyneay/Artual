@@ -42,8 +42,15 @@ class InviteAdminController extends Controller
 
     public function store(StoreInviteRequest $request): JsonResponse
     {
+        $authDriver = config('auth.driver', 'database');
+        if ($authDriver !== 'database') {
+            return response()->json([
+                'error' => 'Создание инвайт-ссылок доступно только при использовании аутентификации через базу данных'
+            ], 403);
+        }
+
         $key = $this->uuidInviteService->generate();
-        $inviteDTO = InviteDTO::make(            
+        $inviteDTO = InviteDTO::make(
             $key,
             $request->validated()['email'],
             now()->format('Y-m-d H:i:s'),
@@ -74,6 +81,13 @@ class InviteAdminController extends Controller
 
     public function accept(string $key, AcceptInviteRequest $request): JsonResponse
     {
+        $authDriver = config('auth.driver', 'database');
+        if ($authDriver !== 'database') {
+            return response()->json([
+                'error' => 'Регистрация через инвайт-ссылки доступна только при использовании аутентификации через базу данных'
+            ], 403);
+        }
+
         if (!$this->uuidInviteService->checkExists($key)) {
             return response()->json(['error' => 'Приглашение не найдено'], 404);
         }
@@ -98,18 +112,18 @@ class InviteAdminController extends Controller
 
         try {
             $result = $this->authService->register($userData);
-            
+
             $usedInviteDTO = InviteDTO::make(
                 $key,
                 $inviteDTO->email,
-                $inviteDTO->created_by,
-                $inviteDTO->created_at,
-                $inviteDTO->expires_at,
+                $inviteDTO->created_at->format('Y-m-d H:i:s'),
+                $inviteDTO->expires_at->format('Y-m-d H:i:s'),
                 $inviteDTO->user_id,
                 $inviteDTO->user_role_id,
                 1
+
             );
-            
+
             $this->uuidInviteService->create($key, $usedInviteDTO, 3600);
 
             return response()->json([
@@ -127,7 +141,7 @@ class InviteAdminController extends Controller
     public function delete(string $key): JsonResponse
     {
         $deleted = $this->uuidInviteService->delete($key);
-        
+
         if (!$deleted) {
             return response()->json(['error' => 'Не удалось удалить приглашение'], 500);
         }

@@ -15,10 +15,6 @@ class UserGroup extends Model
 
     protected $fillable = ['name'];
 
-    // public function users() : BelongsTo
-    // {
-    //     return $this->belongsTo(User::class, 'users_role_id_foreign','id');
-    // }
     public function users() : HasMany
     {
         return $this->hasMany(User::class, 'role_id','id');

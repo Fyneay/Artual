@@ -56,6 +56,29 @@ return [
             'throw' => false,
         ],
 
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST', 'localhost'),
+            'port' => (int)env('SFTP_PORT', 22),
+            'username' => env('SFTP_USER', 'root'),
+            'password' => env('SFTP_PASSWORD', 'admin'),
+            'root' => env('SFTP_ROOT', '/'),
+            'throw' => false,
+            'timeout' => 30,
+            'visibility' => 'public',
+            'directory_visibility' => 'public',
+        ],
+        'sftp_quarantine' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST', 'localhost'),
+            'port' => (int)env('SFTP_PORT', 22),
+            'username' => env('SFTP_USER', 'root'),
+            'password' => env('SFTP_PASSWORD', 'admin'),
+            'root' => env('SFTP_ROOT', '/storage') . '/quarantine',
+            'throw' => false,
+            'timeout' => 30,
+        ],
+
     ],
 
     /*
